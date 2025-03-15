@@ -29,8 +29,8 @@ venv.bak/
 
 # Terraform stuff
 .terraform.lock.hcl
-terraform.tfstate
-terraform.tfstate.backup
+.terraform/
+terraform.tfstate*
 
 # macOS system files
 .DS_Store
