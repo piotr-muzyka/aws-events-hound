@@ -2,11 +2,13 @@ import json
 from sns_client import SNSClient
 from utils import format_message
 
+
 def process_event(event):
     # Extract relevant information from the event
     event_time = event.get('time', '')
     event_name = event.get('detail', {}).get('eventName')
-    
+
+    # TODO cover residual IAM events
     # Check if this is an IAM user creation event
     if event_name != 'CreateUser':
         print(f"Event {event_name} is not a user creation event. Skipping.")
