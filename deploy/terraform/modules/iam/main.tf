@@ -1,4 +1,3 @@
-# IAM Role for Lambda Execution
 resource "aws_iam_role" "lambda_execution_role" {
   name = "${var.lambda_function_name}-role"
 
@@ -16,7 +15,6 @@ resource "aws_iam_role" "lambda_execution_role" {
   })
 }
 
-# IAM Policy for Lambda CloudWatch Logs
 resource "aws_iam_policy" "lambda_logging" {
   name        = "${var.lambda_function_name}-logging-policy"
   description = "IAM policy for logging from a lambda"
@@ -37,7 +35,6 @@ resource "aws_iam_policy" "lambda_logging" {
   })
 }
 
-# IAM Policy for Lambda to publish to SNS
 resource "aws_iam_policy" "lambda_sns" {
   name        = "${var.lambda_function_name}-sns-policy"
   description = "IAM policy for publishing to SNS from lambda"
@@ -78,8 +75,6 @@ resource "aws_iam_policy" "lambda_execution" {
   })
 }
 
-
-# Attach the policies to the Lambda role
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
   role       = aws_iam_role.lambda_execution_role.name
   policy_arn = aws_iam_policy.lambda_logging.arn

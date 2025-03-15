@@ -1,0 +1,69 @@
+name: Deploy Lambda with Terraform
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - '*.py'
+      - 'terraform/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    
+    - name: Create deployment package
+      run: |
+        mkdir -p dist
+        # Install dependencies into a package directory
+        pip install -r requirements.txt --target ./package
+        # Copy Python files to package directory
+        cp *.py package/
+        # Create zip file in the dist directory
+        cd package
+        zip -r ../dist/lambda_function.zip .
+        cd ..
+        echo "Lambda package created at dist/lambda_function.zip"
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.7
+    
+    - name: Terraform Init
+      working-directory: ./terraform
+      run: terraform init
+    
+    - name: Terraform Validate
+      working-directory: ./terraform
+      run: terraform validate
+    
+    - name: Terraform Plan
+      working-directory: ./terraform
+      run: terraform plan -var="lambda_zip_path=../dist/lambda_function.zip"
+    
+    - name: Terraform Apply
+      working-directory: ./terraform
+      run: terraform apply -auto-approve -var="lambda_zip_path=../dist/lambda_function.zip"

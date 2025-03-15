@@ -1,10 +1,8 @@
-# S3 bucket for CloudTrail logs
 resource "aws_s3_bucket" "cloudtrail_bucket" {
   bucket        = "cloudtrail-iam-logs-${var.account_id}"
   force_destroy = true
 }
 
-# S3 bucket policy for CloudTrail
 resource "aws_s3_bucket_policy" "cloudtrail_bucket_policy" {
   bucket = aws_s3_bucket.cloudtrail_bucket.id
   policy = jsonencode({
@@ -37,7 +35,6 @@ resource "aws_s3_bucket_policy" "cloudtrail_bucket_policy" {
   })
 }
 
-# Enable CloudTrail for IAM events
 resource "aws_cloudtrail" "iam_events_trail" {
   name                          = var.cloudtrail_name
   s3_bucket_name                = aws_s3_bucket.cloudtrail_bucket.id

@@ -1,7 +1,5 @@
-# Get current account ID
 data "aws_caller_identity" "current" {}
 
-# SNS Module
 module "sns" {
   source = "./modules/sns"
 
@@ -9,7 +7,6 @@ module "sns" {
   sns_subscription_email = var.sns_subscription_email
 }
 
-# IAM Module
 module "iam" {
   source = "./modules/iam"
 
@@ -17,7 +14,6 @@ module "iam" {
   sns_topic_arn        = module.sns.sns_topic_arn
 }
 
-# CloudTrail Module
 module "cloudtrail" {
   source = "./modules/cloudtrail"
 
@@ -25,7 +21,6 @@ module "cloudtrail" {
   account_id      = data.aws_caller_identity.current.account_id
 }
 
-# # Lambda Module
 module "lambda" {
   source = "./modules/lambda"
 
@@ -36,7 +31,6 @@ module "lambda" {
   cloudwatch_event_arn = module.cloudwatch.cloudwatch_event_rule_arn
 }
 
-# CloudWatch Module
 module "cloudwatch" {
   source = "./modules/cloudwatch"
 

@@ -15,13 +15,11 @@ resource "aws_lambda_function" "iam_user_creation_monitor" {
   }
 }
 
-# CloudWatch Log Group for Lambda
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name              = "/aws/lambda/${var.lambda_function_name}"
   retention_in_days = 14
 }
 
-# Lambda permission to allow CloudWatch Events to invoke the function
 resource "aws_lambda_permission" "allow_cloudwatch" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
