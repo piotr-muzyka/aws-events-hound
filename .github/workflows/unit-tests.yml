@@ -39,10 +39,10 @@ jobs:
     
     - name: Set PYTHONPATH
       run: |
-        echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
+        echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
     
     - name: Run tests with pytest
       env:
         SNS_TOPIC_ARN: arn:aws:sns:eu-central-1:123456789012:test-topic
       run: |
-        python -m pytest tests/
+        python -m pytest 
