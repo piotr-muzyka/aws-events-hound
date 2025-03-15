@@ -5,7 +5,7 @@ data "aws_caller_identity" "current" {}
 module "sns" {
   source = "./modules/sns"
 
-  sns_topic_name        = var.sns_topic_name
+  sns_topic_name         = var.sns_topic_name
   sns_subscription_email = var.sns_subscription_email
 }
 
@@ -40,7 +40,7 @@ module "lambda" {
 module "cloudwatch" {
   source = "./modules/cloudwatch"
 
+  lambda_function_arn    = module.lambda.lambda_function_arn
+  lambda_function_name   = var.lambda_function_name
   cloudwatch_event_rule_name = var.cloudwatch_event_rule_name
-  lambda_function_arn        = module.lambda.lambda_function_arn
-  lambda_function_name       = var.lambda_function_name
 }

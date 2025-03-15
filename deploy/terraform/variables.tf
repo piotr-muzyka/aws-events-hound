@@ -30,7 +30,7 @@ variable "lambda_zip_file" {
 variable "cloudwatch_event_rule_name" {
   description = "Name of the CloudWatch Event Rule"
   type        = string
-  default     = "iam-user-creation-rule"
+  default     = "eventbridge-rule"
 }
 
 variable "cloudtrail_name" {

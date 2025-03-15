@@ -35,3 +35,4 @@ terraform.tfvars
 
 # macOS system files
 .DS_Store
+tests/terraform/.terraform.tfstate.lock.info

@@ -56,6 +56,29 @@ resource "aws_iam_policy" "lambda_sns" {
   })
 }
 
+resource "aws_iam_policy" "lambda_execution" {
+  name        = "${var.lambda_function_name}-execution-policy"
+  description = "IAM policy for lambda to interact with EC2, IAM and S3"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeSecurityGroupRules",
+          "iam:ListUsers",
+          "iam:ListAccessKeys",
+          "s3:GetBucketPolicy"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+
 # Attach the policies to the Lambda role
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
   role       = aws_iam_role.lambda_execution_role.name
@@ -65,4 +88,9 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
 resource "aws_iam_role_policy_attachment" "lambda_sns" {
   role       = aws_iam_role.lambda_execution_role.name
   policy_arn = aws_iam_policy.lambda_sns.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_execution" {
+  role       = aws_iam_role.lambda_execution_role.name
+  policy_arn = aws_iam_policy.lambda_execution.arn
 }
