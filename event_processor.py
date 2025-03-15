@@ -1,6 +1,6 @@
 import json
-from ..sns_client import SNSClient
-from .utils import format_message
+from sns_client import SNSClient
+from utils import format_message
 
 def process_event(event):
     # Extract relevant information from the event

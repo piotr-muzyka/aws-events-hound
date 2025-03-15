@@ -1,6 +1,6 @@
 import unittest
 
-from src.utils import format_message
+from utils import format_message
 
 class TestUtils(unittest.TestCase):
     

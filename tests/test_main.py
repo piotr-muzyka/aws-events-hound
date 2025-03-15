@@ -1,11 +1,11 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from src.main import lambda_handler
+from main import lambda_handler
 
 class TestLambdaHandler(unittest.TestCase):
     
-    @patch('src.main.process_event')
+    @patch('main.process_event')
     def test_lambda_handler_success(self, mock_process_event):
         # Arrange
         mock_process_event.return_value = {'statusCode': 200, 'body': 'Success'}
@@ -19,7 +19,7 @@ class TestLambdaHandler(unittest.TestCase):
         self.assertEqual(result['statusCode'], 200)
         mock_process_event.assert_called_once_with(event)
     
-    @patch('src.main.process_event')
+    @patch('main.process_event')
     def test_lambda_handler_exception(self, mock_process_event):
         # Arrange
         mock_process_event.side_effect = Exception("Test error")

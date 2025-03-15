@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import patch, MagicMock
 
-from src.event_processor import process_event
+from event_processor import process_event
 
 class TestEventProcessor(unittest.TestCase):
     
-    @patch('src.event_processor.SNSClient')
-    @patch('src.event_processor.format_message')
+    @patch('event_processor.SNSClient')
+    @patch('event_processor.format_message')
     def test_process_event_create_user(self, mock_format_message, mock_sns_client):
         # Arrange
         mock_format_message.return_value = "Test message"
@@ -52,8 +52,8 @@ class TestEventProcessor(unittest.TestCase):
         self.assertEqual(result['statusCode'], 200)
         self.assertEqual(result['body'], 'Event ignored - not a user creation event')
     
-    @patch('src.event_processor.SNSClient')
-    @patch('src.event_processor.format_message')
+    @patch('event_processor.SNSClient')
+    @patch('event_processor.format_message')
     def test_process_event_sns_error(self, mock_format_message, mock_sns_client):
         # Arrange
         mock_format_message.return_value = "Test message"
