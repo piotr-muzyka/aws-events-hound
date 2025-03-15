@@ -1,6 +1,6 @@
 import unittest
 
-from src.utils import format_message
+from utils import format_message
 
 class TestUtils(unittest.TestCase):
     
@@ -14,7 +14,7 @@ class TestUtils(unittest.TestCase):
             'region': 'eu-central-1'
         }
         
-        resource_arn = 'Resource ARN: arn:aws:iam::Unknown:user/newuser'
+        resource_arn = 'Resource ARN: arn:aws:iam::Unknown:user/doraemon'
         action = 'Action Performed: User creation'
         # Act
         message = format_message(event_time, created_user_name, actor, event, resource_arn, action)
@@ -25,7 +25,7 @@ class TestUtils(unittest.TestCase):
         self.assertIn('Initiator: admin', message)
         self.assertIn('AWS Account: 123456789012', message)
         self.assertIn('Region: eu-central-1', message)
-        self.assertIn('Resource ARN: arn:aws:iam::Unknown:user/newuser', message)
+        self.assertIn('Resource ARN: arn:aws:iam::Unknown:user/doraemon', message)
         self.assertIn('Action Performed: User creation', message)
 
 
@@ -35,7 +35,7 @@ class TestUtils(unittest.TestCase):
         created_user_name = 'doraemon'
         actor = 'admin'
         event = {}  # Missing account and region
-        resource_arn = 'Resource ARN: arn:aws:iam::Unknown:user/newuser'
+        resource_arn = 'Resource ARN: arn:aws:iam::Unknown:user/doraemon'
         action = 'User creation'
 
         # Act
@@ -47,7 +47,7 @@ class TestUtils(unittest.TestCase):
         self.assertIn('Initiator: admin', message)
         self.assertIn('AWS Account: Unknown', message)
         self.assertIn('Region: Unknown', message)
-        self.assertIn('Resource ARN: arn:aws:iam::Unknown:user/newuser', message)
+        self.assertIn('Resource ARN: arn:aws:iam::Unknown:user/doraemon', message)
         self.assertIn('Action Performed: User creation', message)
 
 if __name__ == '__main__':

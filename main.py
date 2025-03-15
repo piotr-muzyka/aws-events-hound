@@ -1,5 +1,5 @@
 import json
-from src.event_processor import process_event
+from event_processor import process_event
 
 def lambda_handler(event, context):
     try:
