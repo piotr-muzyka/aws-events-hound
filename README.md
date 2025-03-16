@@ -1,5 +1,4 @@
-![Deploy Lambda](https://github.com/piotr-muzyka/aws-iam-hound/workflows/deploy.yml/badge.svg)
-![Unit Tests](https://github.com/piotr-muzyka/aws-iam-hound/workflows/actions/unit-tests.yml/badge.svg)
+![Unit Tests](https://github.com/piotr-muzyka/aws-iam-hound/workflows/unit-tests.yml/badge.svg)
 ![Trivy - Dependency Vulnerability Scan](https://github.com/piotr-muzyka/aws-iam-hound/actions/workflows/trivy-scan.yml/badge.svg)
 
 
