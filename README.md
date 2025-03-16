@@ -1,4 +1,4 @@
-![Unit Tests](https://github.com/piotr-muzyka/aws-events-hound/workflows/unit-tests.yml/badge.svg)
+![Unit Tests](https://github.com/piotr-muzyka/aws-events-hound/actions/workflows/unit-tests.yml/badge.svg)
 ![Trivy - Dependency Vulnerability Scan](https://github.com/piotr-muzyka/aws-events-hound/actions/workflows/trivy-scan.yml/badge.svg)
 
 
