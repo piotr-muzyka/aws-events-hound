@@ -1,9 +1,29 @@
-![Deploy Lambda](https://github.com/piotr-muzyka/aws-iam-hound/workflows/deploy.yml/badge.svg)
-![Unit Tests](https://github.com/piotr-muzyka/aws-iam-hound/workflows/actions/unit-tests.yml/badge.svg)
-![Trivy - Dependency Vulnerability Scan](https://github.com/piotr-muzyka/aws-iam-hound/actions/workflows/trivy-scan.yml/badge.svg)
+![Unit Tests](https://github.com/piotr-muzyka/aws-events-hound/workflows/unit-tests.yml/badge.svg)
+![Trivy - Dependency Vulnerability Scan](https://github.com/piotr-muzyka/aws-events-hound/actions/workflows/trivy-scan.yml/badge.svg)
 
 
 # AWS Hound
+
+## Table of Contents
+
+- [Purpose](#purpose)
+- [Repository Structure](#repository-structure)
+- [Features](#features)
+- [Setup](#setup)
+- [Workflows](#workflows)
+  - [Python Unit-Tests Workflow](#1-python-tests-workflow-python-unit-testsyml) 
+  - [Security Scanning Workflow](#2-security-scanning-workflow-trivy-scanyml)
+- [Deployment Instructions](#deployment-instructions)
+  - [Prerequisites](#prerequisites)
+  - [Deploying with GitHub Actions](#deploying-with-github-actions)
+  - [Manual Deployment](#manual-deployment)
+- [Testing the Solution](#testing-the-solution)
+  - [Using the Test Resources Workflow](#using-the-test-resources-workflow)
+  - [Manual Testing](#manual-testing)
+- [Limitations](#limitations)
+- [TODOs](#todo)
+
+## Purpose
 
 AWS Hound is a monitoring solution intended to alert AWS security events in your AWS environment. It monitors for IAM user creation, access key generation, S3 bucket policy changes, and security group modifications that could potentially expose resources publicly.
 
@@ -15,7 +35,7 @@ AWS Hound is a monitoring solution intended to alert AWS security events in your
 ├── event_processor.py          # Core logic for processing security events
 ├── sns_client.py               # SNS notification functionality
 ├── requirements.txt            # Python dependencies
-├── deploy/terraform/                  # Terraform configuration
+├── deploy/terraform/           # Terraform configuration
 │   ├── main.tf                 # Main Terraform configuration
 │   ├── variables.tf            # Input variables
 │   ├── outputs.tf              # Output values
@@ -26,53 +46,45 @@ AWS Hound is a monitoring solution intended to alert AWS security events in your
 │       ├── iam/                # IAM roles and policies
 │       └── cloudtrail/         # CloudTrail configuration
 ├── tests/                      # Modular Terraform components
-│   ├── test_event_processor.py
-│   ├── test_main.py
-│   ├── test_sns_client.py
-│   ├── test_utils.py
+│   ├── test_event_processor.py # Unit tests for security events processing
+│   ├── test_main.py            # Unit tests for primary entry point
+│   ├── test_sns_client.py      # Unit tests for SNS notification client
+│   ├── test_utils.py           # Unit tests for message formatting
 │   └── terraform/
 │       ├── main.tf             # Lambda function configuration
 │       ├── provider.tf         # CloudWatch event rules
-│       └── variables.tf         # SNS topic for notifications
+│       └── variables.tf        # SNS topic for notifications
 └── .github/
     └── workflows/
         ├── deploy.yml          # Main deployment workflow
-        ├── deploy-test-resources.yml  # Test resources deployment
-        └── python-tests.yml    # Python unit tests workflow
+        ├── trivy-scan.yml      # Dependency vulnerability workflow
+        └── unit-tests.yml      # Python unit tests workflow
 ```
+## Setup
+Tested with:
+- Terraform  `v1.5.7`
+- hashicorp/aws `v5.91`
 
 ## Workflows
 
-### 1. Main Deployment Workflow (`deploy.yml`)
-
-This workflow automatically deploys the Lambda function and associated infrastructure when changes are pushed to the repository.
-
-- **Trigger**: Runs on pushes to main branch or manual trigger
-- **Actions**:
-    - Packages Python code into a Lambda deployment package
-    - Initializes and applies Terraform configuration
-    - Deploys the complete monitoring solution
-
-
-### 2. Test Resources Workflow (`deploy-test-resources.yml`)
-
-This workflow deploys test resources to verify that the monitoring solution is working correctly.
-
-- **Trigger**: Manual only (to avoid accidental resource creation)
-- **Actions**:
-    - Creates test IAM user, access key, S3 bucket, bucket policy, and security group
-    - Optionally destroys resources after a specified testing period
-
-
-### 3. Python Tests Workflow (`python-tests.yml`)
+### 1. Python Unit-Tests Workflow (`unit-tests.yml`)
 
 This workflow runs unit tests for the Python code.
 
 - **Trigger**: Runs on pushes to main/master branch or pull requests
 - **Actions**:
     - Runs pytest on the Python codebase
-    - Reports test coverage
 
+### 2. Security Scanning Workflow (`trivy-scan.yml`)
+
+This workflow performs comprehensive security scanning of the codebase using Trivy, a vulnerability scanner that detects security issues in code, dependencies, and infrastructure configurations.
+
+- **Trigger**: Runs on pushes to main/master branch, pull requests, weekly schedule, or manual trigger
+- **Actions**:
+    - Scans repository for vulnerabilities and misconfigurations
+    - Identifies vulnerable dependencies in requirements.txt
+    - Provides detailed vulnerability information with severity levels
+    - Suggests remediation steps for identified issues
 
 ## Deployment Instructions
 
@@ -181,7 +193,7 @@ aws configure  # Set up your AWS credentials (don't user root account! Create a 
                 "sns:ListTagsForResource",
                 "sns:GetSubscriptionAttributes"
             ],
-            "Resource": "arn:aws:sns:us-east-1:120569630424:iam-user-creation-alerts"
+            "Resource": "arn:aws:sns:us-east-1:<account_ID>:iam-user-creation-alerts"
         },
         {
             "Effect": "Allow",
@@ -205,7 +217,7 @@ aws configure  # Set up your AWS credentials (don't user root account! Create a 
                 "logs:DescribeLogGroups",
                 "logs:ListTagsLogGroup"
             ],
-            "Resource": "arn:aws:logs:us-east-1:120569630424:log-group::log-stream*"
+            "Resource": "arn:aws:logs:us-east-1:<account_ID>:log-group::log-stream*"
         },
         {
             "Effect": "Allow",
@@ -343,3 +355,17 @@ You can also test the solution manually by:
 4. Creating or modifying a security group to allow public access
 
 Each of these actions should trigger an alert through your configured SNS topic.
+
+### Limitations 
+- Security Group Ingress Rule Changes not fully implemented as per specification, lack of non-private IP range specific check
+- Requires manual deployment of IAM user for terraform code deployment, 
+- Access key for IAM user has to be created and stored as a secret for use to deploy solution with GitHub Actions 
+- Tested in us-east-1 AWS region only,
+- Tested on MacOS (15.3.1) only,
+
+### TODOs
+- covering security group ingress rule change use case fully,
+- use terratest to automate end to end testing,
+- fully cover code with tests,
+- update readme with more details on the deployment of terraform-deploy user along with the IAM policy,
+- follow least-privilege principle in IAM policy for terraform deploy user, limit scope to specific resources,
