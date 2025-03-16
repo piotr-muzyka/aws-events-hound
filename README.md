@@ -4,7 +4,28 @@
 
 # AWS Hound
 
+## Table of Contents
+
+- [Purpose](#purpose)
+- [Repository Structure](#repository-structure)
+- [Features](#features)
+- [Workflows](#workflows)
+  - [Python Unit-Tests Workflow](#1-python-tests-workflow-python-unit-testsyml) 
+  - [Security Scanning Workflow](#2-security-scanning-workflow-trivy-scanyml)
+- [Deployment Instructions](#deployment-instructions)
+  - [Prerequisites](#prerequisites)
+  - [Deploying with GitHub Actions](#deploying-with-github-actions)
+  - [Manual Deployment](#manual-deployment)
+- [Testing the Solution](#testing-the-solution)
+  - [Using the Test Resources Workflow](#using-the-test-resources-workflow)
+  - [Manual Testing](#manual-testing)
+
 AWS Hound is a monitoring solution intended to alert AWS security events in your AWS environment. It monitors for IAM user creation, access key generation, S3 bucket policy changes, and security group modifications that could potentially expose resources publicly.
+
+## Setup
+Tested with:
+- Terraform  `v1.5.7`
+- hashicorp/aws `v5.91`
 
 ## Repository Structure
 
@@ -42,36 +63,24 @@ AWS Hound is a monitoring solution intended to alert AWS security events in your
 
 ## Workflows
 
-### 1. Main Deployment Workflow (`deploy.yml`)
-
-This workflow automatically deploys the Lambda function and associated infrastructure when changes are pushed to the repository.
-
-- **Trigger**: Runs on pushes to main branch or manual trigger
-- **Actions**:
-    - Packages Python code into a Lambda deployment package
-    - Initializes and applies Terraform configuration
-    - Deploys the complete monitoring solution
-
-
-### 2. Test Resources Workflow (`deploy-test-resources.yml`)
-
-This workflow deploys test resources to verify that the monitoring solution is working correctly.
-
-- **Trigger**: Manual only (to avoid accidental resource creation)
-- **Actions**:
-    - Creates test IAM user, access key, S3 bucket, bucket policy, and security group
-    - Optionally destroys resources after a specified testing period
-
-
-### 3. Python Tests Workflow (`python-tests.yml`)
+### 1. Python Unit-Tests Workflow (`unit-tests.yml`)
 
 This workflow runs unit tests for the Python code.
 
 - **Trigger**: Runs on pushes to main/master branch or pull requests
 - **Actions**:
     - Runs pytest on the Python codebase
-    - Reports test coverage
 
+### 2. Security Scanning Workflow (`trivy-scan.yml`)
+
+This workflow performs comprehensive security scanning of the codebase using Trivy, a vulnerability scanner that detects security issues in code, dependencies, and infrastructure configurations.
+
+- **Trigger**: Runs on pushes to main/master branch, pull requests, weekly schedule, or manual trigger
+- **Actions**:
+    - Scans repository for vulnerabilities and misconfigurations
+    - Identifies vulnerable dependencies in requirements.txt
+    - Provides detailed vulnerability information with severity levels
+    - Suggests remediation steps for identified issues
 
 ## Deployment Instructions
 
