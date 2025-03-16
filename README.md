@@ -1,5 +1,5 @@
-[![Deploy Lambda](https://github.com/piotr-muzyka/aws-iam-hound/workflows/deploy.yml/badge.svg)](https://github.com/piotr-muzyka/aws-iam-hound/workflows/deploy.yml)
-[![Python Tests](https://github.com/piotr-muzyka/aws-iam-hound/workflows/unit-tests.yml/badge.svg)](https://github.com/piotr-muzyka/aws-iam-hound/workflows/unit-tests.yml)
+[![Deploy Lambda](https://github.com/piotr-muzyka/aws-iam-hound/actions/workflows/deploy.yml/badge.svg)](https://github.com/piotr-muzyka/aws-iam-hound/workflows/actions/deploy.yml)
+[![Python Tests](https://github.com/piotr-muzyka/aws-iam-hound/actions/workflows/actions/unit-tests.yml/badge.svg)](https://github.com/piotr-muzyka/aws-iam-hound/workflows/actions/unit-tests.yml)
 
 # AWS Hound
 
