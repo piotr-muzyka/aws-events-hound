@@ -7,24 +7,15 @@ class TestUtils(unittest.TestCase):
     def test_format_message(self):
         # Arrange
         event_time = '2025-03-15T00:00:00Z'
-        created_user_name = 'doraemon'
         actor = 'admin'
-        event = {
-            'account': '123456789012',
-            'region': 'eu-central-1'
-        }
-        
         resource_arn = 'Resource ARN: arn:aws:iam::Unknown:user/doraemon'
         action = 'Action Performed: User creation'
         # Act
-        message = format_message(event_time, created_user_name, actor, event, resource_arn, action)
+        message = format_message(event_time, actor, resource_arn, action)
         
         # Assert
-        self.assertIn('Time of Event: 2025-03-15T00:00:00Z', message)
-        self.assertIn('New User Created: doraemon', message)
+        self.assertIn('Time: 2025-03-15T00:00:00Z', message)
         self.assertIn('Initiator: admin', message)
-        self.assertIn('AWS Account: 123456789012', message)
-        self.assertIn('Region: eu-central-1', message)
         self.assertIn('Resource ARN: arn:aws:iam::Unknown:user/doraemon', message)
         self.assertIn('Action Performed: User creation', message)
 
@@ -32,21 +23,16 @@ class TestUtils(unittest.TestCase):
     def test_format_message_missing_fields(self):
         # Arrange
         event_time = '2025-03-15T00:00:00Z'
-        created_user_name = 'doraemon'
         actor = 'admin'
-        event = {}  # Missing account and region
         resource_arn = 'Resource ARN: arn:aws:iam::Unknown:user/doraemon'
         action = 'User creation'
 
         # Act
-        message = format_message(event_time, created_user_name, actor, event, resource_arn, action)
+        message = format_message(event_time, actor, resource_arn, action)
         
         # Assert
-        self.assertIn('Time of Event: 2025-03-15T00:00:00Z', message)
-        self.assertIn('New User Created: doraemon', message)
+        self.assertIn('Time: 2025-03-15T00:00:00Z', message)
         self.assertIn('Initiator: admin', message)
-        self.assertIn('AWS Account: Unknown', message)
-        self.assertIn('Region: Unknown', message)
         self.assertIn('Resource ARN: arn:aws:iam::Unknown:user/doraemon', message)
         self.assertIn('Action Performed: User creation', message)
 

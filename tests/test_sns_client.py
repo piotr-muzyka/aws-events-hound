@@ -52,7 +52,7 @@ class TestSNSClient(unittest.TestCase):
         
         # Act/Assert
         with self.assertRaises(Exception) as context:
-            client.publish(message)
+            client.publish(message, subject="Test")
         
         self.assertIn('Failed to publish to SNS', str(context.exception))
 
