@@ -1,3 +1,6 @@
+[![Deploy Lambda](https://github.com/piotr-muzyka/aws-iam-hound/workflows/deploy.yml/badge.svg)](https://github.com/piotr-muzyka/aws-iam-hound/workflows/deploy.yml)
+[![Python Tests](https://github.com/piotr-muzyka/aws-iam-hound/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/piotr-muzyka/aws-iam-hound/workflows/unit-tests.yml)
+
 # AWS Hound
 
 AWS Hound is a monitoring solution intended to alert AWS security events in your AWS environment. It monitors for IAM user creation, access key generation, S3 bucket policy changes, and security group modifications that could potentially expose resources publicly.
